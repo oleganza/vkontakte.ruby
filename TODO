@@ -1,0 +1,22 @@
+Task                           Who's responsible
+------------------------------------------------
+strokedb                       oleganza
+  specs for views              oleganza
+  OO-wrapper                   oleganza
+http bot                       sigurd
+  login/password -> cookie     sigurd
+  GET                          sigurd
+  POST                         sigurd
+content retrieval:
+  audio
+  video
+  photos
+  contacts
+  notes
+  friends
+    audio
+    video
+    photos
+    contacts
+    notes
+

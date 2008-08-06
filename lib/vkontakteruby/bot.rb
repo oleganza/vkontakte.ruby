@@ -10,6 +10,9 @@ class Hash
 end  
 
 module VkontakteRuby
+  # Bot to grab vkontakte.ru pages with autologin feature
+  # ==== Example
+  #  Bot.new(:login => "Somelogin", :passwod => "Somepassword").get("http://vkontakte.ru/id1")
   class Bot
     LOGIN_URL = "http://vkontakte.ru/login.php"
     attr_reader :response
@@ -23,13 +26,17 @@ module VkontakteRuby
       end      
       login
     end
-      
+    
+    # Perform GET request and returns request result  
     def get(url)
       @curl.url = url
       @curl.perform
       @curl.body_str
     end
-      
+    
+    # Perform POST request and returns request result  
+    # ==== Example
+    # Bot.new(:login => "Somelogin", :passwod => "Somepassword").put("http://vkontakte.ru/id1", {:somefield => "somevalue"})
     def put(url, fields = {}) 
       @curl.url = url
       @curl.http_post(url, fields.stringify_keys.map{|k,v| Curl::PostField.content(k,v)})

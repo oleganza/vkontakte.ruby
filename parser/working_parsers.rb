@@ -31,4 +31,23 @@ module Parsers
       end
     end 
   end
+
+  class Notes
+    extend BaseParser
+
+    # content source example: http://vkontakte.ru/notes.php?id=1&42003, http://vkontakte.ru/notes1?&st=0
+    # result example: {"notes"=>["note6352523?oid=1", "note5223960?oid=1", "note5188853?oid=1"], "pages"=>["notes1?&amp;st=20"]}
+    def self.parse_personal_list content
+      notes_records = content.scan(/<div class="note_title".*?a href="(.*?)">.*?<\/a.*?\/div>/mi).flatten
+      pages_records = content.scan(/<li><a href='(notes\d+?.+?st=\d+)'>\d+<\/a><\/li>/mi).uniq.flatten
+      {'notes' => notes_records, 'pages' => pages_records}
+    end
+
+    # content source example: http://vkontakte.ru/note6352523?oid=1
+    # result example: {"created_at"=>"5 June 2008 at 4:19", "body"=>"\317\356\367\342\345\360\355\356?\r\n ", "author"=>"Pavel Durov", "title"=>"10 millionov"}
+    def self.parse_single_note content
+      record = content.scan(/<div class="note_title".*?a href=".*?">(.*?)<\/a.*?div class="byline".*?span><a href=".*?">(.*?)<\/a><\/span> (.*?\d+:\d+).*?\/div.*?\/div.*?div class="note_content clearFix".*?div>(.*?)<\/div>/mi)
+      {'title' => record[0][0], 'author' => record[0][1], 'created_at' => record[0][2], 'body' => record[0][3]}
+    end
+  end
 end

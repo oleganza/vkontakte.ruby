@@ -8,12 +8,12 @@ http bot                       sigurd
   GET                          sigurd
   POST                         sigurd
 content retrieval:
-  audio
-  video
-  photos
-  contacts
-  notes
-  friends
+  audio                        shine
+  video                        shine 
+  photos                       shine
+  contacts                     shine
+  notes                        shine
+  friends                      shine
     audio
     video
     photos

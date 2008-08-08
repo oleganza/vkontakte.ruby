@@ -7,7 +7,7 @@ require 'jcode'
 $KCODE = 'u'
 
 
-module VkontakteRuby
+module Vkontakte
   class User
     attr_accessor :id, :email, :pass
     attr_accessor :authorized
@@ -56,14 +56,14 @@ module VkontakteRuby
       (email and not email.empty?) and  (pass and not pass.empty?)
     end
     
-    private 
-      def send_authorization_request
-        response = request('/login.php', nil).post :email => email, :pass => pass
-        begin
-          self.id = ::CGI::Cookie.parse(response['Set-Cookie'])['remixmid'].first.to_i
-        rescue
-          raise "Can't sign in with #{email}:#{pass}"
-        end
+  private 
+    def send_authorization_request
+      response = request('/login.php', nil).post :email => email, :pass => pass
+      begin
+        self.id = ::CGI::Cookie.parse(response['Set-Cookie'])['remixmid'].first.to_i
+      rescue
+        raise "Can't sign in with #{email}:#{pass}"
       end
+    end
   end
 end

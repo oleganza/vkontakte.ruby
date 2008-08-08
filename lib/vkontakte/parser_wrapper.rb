@@ -1,4 +1,4 @@
-module VkontakteRuby
+module Vkontakte
   module ParserWrapper
     def music
       Parsers::Music.parse_personal_list request("/audio.php").get_personalized.body

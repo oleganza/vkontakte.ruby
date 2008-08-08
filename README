@@ -1,8 +1,9 @@
-Vkontakte.ruby is an API for syncing vkontakte.ru personal data with the local StrokeDB database.
+Vkontakte.ruby is an API for syncing vkontakte.ru personal data 
+with the local StrokeDB database.
 
 The following is the propsed API. It works partially, however needs more work on parsers.
 
-me = VkontateRuby::User.new "invizko@gmail.com", "whatever"
+me = Vkontakte::User.new "invizko@gmail.com", "whatever"
 me.id #=> 5567476 
 me.videos #=> [{"duration"=>"4:17", "title"=>"Gabriel", "performer"=>"Lamb", "operate"=>"40134438,1522,5567476,'2ca4745378',257"}, {"duration"=>"1:14", "title"=>"Generation of Terror", "performer"=>"Fexamot", "operate"=>"39117745,1527,5567476,'7b61c70c8a',74"}...]
 
@@ -17,8 +18,6 @@ me.friends.each do |f|
   end
 end
 
-
-
 Puppets
 
 Call them bots, if you please. They are used to browser other user's profiles like this:
@@ -28,7 +27,6 @@ VkontakteRuby::User.new("invizko@gmail.com", "whatever").puppetize! #=> [<#User.
 
 other = VkontakteRuby::User.new("5567476") #no password or email, just id
 other.music #=> [{"duration"=>"2:51", "title"=>"Дождь", "performer"=>"Эллизиум", "operate"=>"41451493,1069,4154652,'42ee3564e0',171"}, {"duration"=>"2:58", "title"=>"Я кричу", "performer"=>"Эллизиум", "operate"=>"41414509,1110,324642,'264be6e4fa',178"}]
-
 
 
 MIT License.

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
-require 'lib/vkontakte.rb'
-require 'irb'
+require File.join(File.dirname(__FILE__), '/../lib/vkontakte')
+include Vkontakte::Console
+initialize_console
 IRB.start

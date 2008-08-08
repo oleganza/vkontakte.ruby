@@ -1,4 +1,4 @@
-module VkontakteRuby
+module Vkontakte
   class Cookies
     PREFIX = 'remix'.freeze
     

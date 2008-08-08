@@ -1,14 +1,14 @@
 Vkontakte.ruby is an API for syncing vkontakte.ru personal data with the local StrokeDB database.
 
-Current API:
+The following is the propsed API. It works partially, however needs more work on parsers.
 
-me = VkontateRuby.new "invizko@gmail.com", "whatever"
+me = VkontateRuby::User.new "invizko@gmail.com", "whatever"
 me.id #=> 5567476 
 me.videos #=> [{"duration"=>"4:17", "title"=>"Gabriel", "performer"=>"Lamb", "operate"=>"40134438,1522,5567476,'2ca4745378',257"}, {"duration"=>"1:14", "title"=>"Generation of Terror", "performer"=>"Fexamot", "operate"=>"39117745,1527,5567476,'7b61c70c8a',74"}...]
 
 me.friends.each do |f|
-  friend = User.new(f) #created by-id
-  if friend.friends.any? {|ff| ff == me.id}
+  friend = VkontateRuby::User.new(f) #created by-id
+  if friend.friends.any? {|ff| ff == me.id }
     p "#{friend.name} is your mutual friend"
   else
     p "#{friend.name} is not your friend at all."

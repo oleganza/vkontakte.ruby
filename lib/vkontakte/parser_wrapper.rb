@@ -6,15 +6,15 @@ module Vkontakte
     alias audios music
     
     def videos
-      Parsers::Music.parse_personal_list request("/video.php").get_personalized.body
+      Parsers::Video.parse_personal_list request("/video.php").get_personalized.body
     end
     
     def notes
-      Parsers::Music.parse_personal_list request("/notes.php").get_personalized.body
+      Parsers::Notes.parse_personal_list request("/notes.php").get_personalized.body
     end
     
     def friends
-      Parsers::Music.parse_personal_list request("/friend.php").get_personalized.body
+      Parsers::Friends.parse_personal_list request("/friend.php").get_personalized.body
     end
     
   end

@@ -1,3 +1,4 @@
+require 'base_parser'
 
 module Parsers
   class Music
@@ -57,6 +58,23 @@ module Parsers
     # result example: ["3947147", "5953678", "5886400"]
     def self.parse_personal_list content
       content.scan(/\[(\d+?), \{f:'.+?', l:'.+?'\},\{p:.*?u:\d+\}\]/mi).map!{|item| item[0]}
+    end
+  end
+
+  class Contacts
+    extend BaseParser
+
+    # content source example: http://vkontakte.ru/profile.php?id=585655
+    # result example: [{"mobilnik"=>"80934085721"}, {"ICQ"=>"227310120"}, {"city"=>"\312\350\345\342"}, {"address"=>"\312\356\354\363 \355\340\344\356 \362\356\362 \347\355\340\345\362"}, {"index"=>"\365\347 \355\350\352\356\343\344\340 \355\345 \347\355\340\353"}, {"web site"=>"http://strelok.ho.com.ua"}]
+    def self.parse_contacts content
+      contacts_table = content.scan(/page=contacts(.*?)\/table/mi)[0][0] # since contact information blocks are too standard lets remove HTML with it from common DOM
+
+      records = contacts_table.scan(/label">(.+?):<\/td.*?dataWrap">\s*?\r\n\s*(.*?)\s*<\/div>/mi)
+      records.delete_if{|key, value| value =~ /<\/span>/} # removing span with innerHTML = 'secured information'
+      records.map! do |key, value| # url normalizing
+        url = value.scan(/<a.*?>(.*?)<\/a>/mi)
+        url.size > 0 ? {key => url[0][0]} : {key => value}
+      end
     end
   end
 end

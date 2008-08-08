@@ -35,7 +35,7 @@ module Parsers
   class Notes
     extend BaseParser
 
-    # content source example: http://vkontakte.ru/notes.php?id=1&42003, http://vkontakte.ru/notes1?&st=0
+    # content source example: http://vkontakte.ru/notes.php?id=1, http://vkontakte.ru/notes1?&st=0
     # result example: {"notes"=>["note6352523?oid=1", "note5223960?oid=1", "note5188853?oid=1"], "pages"=>["notes1?&amp;st=20"]}
     def self.parse_personal_list content
       notes_records = content.scan(/<div class="note_title".*?a href="(.*?)">.*?<\/a.*?\/div>/mi).flatten
@@ -48,6 +48,16 @@ module Parsers
     def self.parse_single_note content
       record = content.scan(/<div class="note_title".*?a href=".*?">(.*?)<\/a.*?div class="byline".*?span><a href=".*?">(.*?)<\/a><\/span> (.*?\d+:\d+).*?\/div.*?\/div.*?div class="note_content clearFix".*?div>(.*?)<\/div>/mi)
       {'title' => record[0][0], 'author' => record[0][1], 'created_at' => record[0][2], 'body' => record[0][3]}
+    end
+  end
+
+  class Friends
+    extend BaseParser
+
+    # content source example: http://vkontakte.ru/friend.php?id=2325643
+    # result example: ["3947147", "5953678", "5886400"]
+    def self.parse_personal_list content
+      content.scan(/\[(\d+?), \{f:'.+?', l:'.+?'\},\{p:.*?u:\d+\}\]/mi).map!{|item| item[0]}
     end
   end
 end

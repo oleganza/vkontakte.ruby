@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'lib/vkontakte.rb'
+require 'irb'
+IRB.start

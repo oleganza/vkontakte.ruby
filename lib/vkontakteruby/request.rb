@@ -59,7 +59,9 @@ module VkontakteRuby
     end
     
     def get(params = {})
-      handle :get, headers
+      with_params params do
+        handle :get, headers
+      end
     end
     alias to_s get
     
@@ -76,9 +78,8 @@ module VkontakteRuby
         #rescue proxy unvailability thing here
         begin
           args.insert 0, path
-          r = connection.send method, *args
-          p method, *args
-          r
+          p args
+          connection.send method, *args
         rescue Net::HTTPBadResponse => e
           raise "Cant handle the request because of #{e.inspect}"
         end
@@ -102,7 +103,7 @@ module VkontakteRuby
         return block.call if params.empty?
         
         old_path = self.path
-        self.path += "?" + params.to_params
+        self.path += (self.path.index("?") ? "&" : "?") + params.to_params
         result = block.call
         self.path = old_path
         result

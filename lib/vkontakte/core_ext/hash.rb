@@ -3,25 +3,9 @@ class Hash
     params = ''
     stack = []
 
-    each do |k, v|
-      if v.is_a?(Hash)
-        stack << [k,v]
-      else
-        params << "#{k}=#{v}&"
-      end
-    end
-
-    stack.each do |parent, hash|
-      hash.each do |k, v|
-        if v.is_a?(Hash)
-          stack << ["#{parent}[#{k}]", v]
-        else
-          params << "#{parent}[#{k}]=#{v}&"
-        end
-      end
-    end
+    each{|k, v| v.is_a?(Hash) ? stack << [k,v] : params << "#{k}=#{v}&"}
+    stack.each{|parent, hash| hash.each{|k, v| v.is_a?(Hash) ? stack << ["#{parent}[#{k}]", v] : params << "#{parent}[#{k}]=#{v}&"}}
 
     params.chop! # trailing &
-    params
   end
 end

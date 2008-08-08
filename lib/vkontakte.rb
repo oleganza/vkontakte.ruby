@@ -8,6 +8,7 @@ end
 
 require 'vkontakte/core_ext/hash'
 
+require 'vkontakte/util/smtp_server'
 require 'vkontakte/request'
 require 'vkontakte/user'
 require 'vkontakte/parsers'

@@ -18,6 +18,19 @@ me.friends.each do |f|
 end
 
 
+
+Puppets
+
+Call them bots, if you please. They are used to browser other user's profiles like this:
+
+
+VkontakteRuby::User.new("invizko@gmail.com", "whatever").puppetize! #=> [<#User...>], the array of all active puppets
+
+other = VkontakteRuby::User.new("5567476") #no password or email, just id
+other.music #=> [{"duration"=>"2:51", "title"=>"Дождь", "performer"=>"Эллизиум", "operate"=>"41451493,1069,4154652,'42ee3564e0',171"}, {"duration"=>"2:58", "title"=>"Я кричу", "performer"=>"Эллизиум", "operate"=>"41414509,1110,324642,'264be6e4fa',178"}]
+
+
+
 MIT License.
 
 CONTRIBUTORS

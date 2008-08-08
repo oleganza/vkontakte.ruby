@@ -5,9 +5,10 @@ module VkontakteRuby
     attr_accessor :id, :email, :pass
     
     def initialize(user)
+      return unless user
       @id       = user.id 
-      @email    = user.email    or raise "No Email given"
-      @pass     = user.pass or raise "No pass given"
+      @email    = user.email or raise "No Email given"
+      @pass     = user.pass  or raise "No pass given"
     end
     
     def id
@@ -40,6 +41,22 @@ module VkontakteRuby
   class Request
     DOMAIN = 'vkontakte.ru'.freeze
     
+    class << self
+      def puppets
+        @puppets ||= []
+      end
+      
+      def add_puppet(user)
+        puppets << user if user.authorized?
+      end
+      
+      def free_puppet
+        #here we can check if puppet is requesting something and is busy
+        #but we dont ;]
+        puppets[(rand * puppets.size).floor - 1]
+      end
+    end
+    
     attr_accessor :path, :user, :cookies
     
     def initialize(path = '/')
@@ -48,7 +65,6 @@ module VkontakteRuby
     
     def as(user)
       self.user = user
-      self.cookies = Cookies.new(user).to_s if user
       self
     end
     
@@ -78,25 +94,30 @@ module VkontakteRuby
         #rescue proxy unvailability thing here
         begin
           args.insert 0, path
-          p args
-          connection.send method, *args
+          response = connection.send method, *args
+          response.instance_eval do 
+            alias old_body body
+            def body 
+              Iconv.iconv("UTF-8", "CP1251", old_body).first
+            end
+          end
+          
+          if Net::HTTPRedirection === response
+            raise "You should log this user in or choose a puppet"  if response['Location'].index "login"
+          end
+          response
         rescue Net::HTTPBadResponse => e
           raise "Cant handle the request because of #{e.inspect}"
         end
-      end
-      
-      def convert(string)
-        Iconv.iconv("UTF-8", "CP1251", string)
       end
       
       def headers
         hash = {
           'Content-Type' => 'application/x-www-form-urlencoded',
           'User-Agent' => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1',
-          'Referer' => "http://#{DOMAIN}/index.php"
+          'Referer' => "http://#{DOMAIN}/index.php",
+          'Cookie' => puppet ? Cookies.new(puppet).to_s : ''
         }
-        hash['Cookie'] = self.cookies if self.cookies and not self.cookies.empty?
-        hash
       end
       
       def with_params(params, &block)
@@ -107,6 +128,10 @@ module VkontakteRuby
         result = block.call
         self.path = old_path
         result
+      end
+      
+      def puppet
+        self.user && self.user.accessible? ? self.user : self.class.free_puppet 
       end
   end
 end

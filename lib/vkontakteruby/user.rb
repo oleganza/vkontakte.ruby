@@ -14,7 +14,7 @@ module VkontakteRuby
     
     def initialize(*args)
       if (args.size == 1)
-        self.id = args.first
+        self.id = args.first.to_i
       else
         self.email, self.pass = args
       end      
@@ -40,6 +40,20 @@ module VkontakteRuby
     
     def authorized?
       authorized
+    end
+    
+    def puppetize!
+      authorize
+      Request.add_puppet(self)
+    end
+    
+    def homepage
+      request("/id#{id}")
+    end
+    
+    def accessible?
+      #I think i really should define NilClass#empty
+      (email and not email.empty?) and  (pass and not pass.empty?)
     end
     
     private 

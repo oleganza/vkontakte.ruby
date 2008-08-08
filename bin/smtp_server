@@ -2,4 +2,5 @@
 require File.join(File.dirname(__FILE__), '/../lib/vkontakte')
 include Vkontakte
 port = ARGV[0] || ENV['SMTP_PORT'] || 25
-SMTPServer.start(port.to_i)
+host = ARGV[1] || ENV['SMTP_HOST'] || "0.0.0.0"
+SMTPServer.start(port.to_i, host.to_s)

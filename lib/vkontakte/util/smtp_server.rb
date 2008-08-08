@@ -49,8 +49,8 @@ module Vkontakte
       end
     end
     
-    def self.start(port = 25)
-      s = new(port)
+    def self.start(port = 25, host = "0.0.0.0")
+      s = new(port, host)
       s.start
       s.join
     end

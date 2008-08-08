@@ -6,6 +6,8 @@ module Vkontakte
   VERSION = "0.1"
 end
 
+require 'vkontakte/core_ext/hash'
+
 require 'vkontakte/request'
 require 'vkontakte/user'
 require 'vkontakte/parsers'

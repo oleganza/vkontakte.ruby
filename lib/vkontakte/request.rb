@@ -93,7 +93,7 @@ module Vkontakte
       def handle(method, *args)
         #rescue proxy unvailability thing here
         begin
-          args.insert 0, path
+          args.insert 0, (path[0,1] == "/" ? path : "/#{path}")
           response = connection.send method, *args
           response.instance_eval do 
             alias old_body body
@@ -102,9 +102,9 @@ module Vkontakte
             end
           end
           
+            p path
+          
           if Net::HTTPRedirection === response
-            p response
-            p response['Location']
             raise "You should log this user in or choose a puppet"  if response['Location'].index "login"
           end
           response

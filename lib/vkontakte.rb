@@ -8,8 +8,5 @@ end
 
 require 'vkontakte/request'
 require 'vkontakte/user'
-require 'vkontakte/parser_wrapper'
-
-require 'vkontakte/parsers/base_parser'
-require 'vkontakte/parsers/working_parsers'
+require 'vkontakte/parsers'
 require 'vkontakte/console'

@@ -1,3 +1,6 @@
+require 'vkontakte/parsers/base_parser'
+require 'vkontakte/parsers/working_parsers'
+
 module Vkontakte
   module ParserWrapper
     def music

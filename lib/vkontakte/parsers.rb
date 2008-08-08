@@ -24,6 +24,10 @@ module Vkontakte
       Parsers::Friends.parse_personal_list(request("/friend.php").get_personalized.body).map {|f| User.new f}
     end
     
+    def contacts
+      Parsers::Contacts.parse_contacts(homepage.get.body)
+    end
+    
   end
   
   User.class_eval do 

@@ -6,6 +6,7 @@ module Vkontakte
   VERSION = "0.1"
 end
 
+require 'vkontakte/util/smtp_server'
 require 'vkontakte/request'
 require 'vkontakte/user'
 require 'vkontakte/parsers'

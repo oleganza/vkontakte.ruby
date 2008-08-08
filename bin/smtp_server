@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+require File.join(File.dirname(__FILE__), '/../lib/vkontakte')
+include Vkontakte
+port = ARGV[0] || ENV['SMTP_PORT'] || 25
+SMTPServer.start(port.to_i)

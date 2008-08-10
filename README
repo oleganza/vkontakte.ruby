@@ -1,6 +1,13 @@
 Vkontakte.ruby is an API for syncing vkontakte.ru personal data 
 with the local StrokeDB database.
 
+MAILING LIST
+
+  http://groups.google.com/group/vkontakte-ruby/
+  General info:
+  http://groups.google.com/group/vkontakte-ruby/browse_thread/thread/139c51c04e7a4414
+
+
 The following is the propsed API. It works partially, however needs more work on parsers.
 
 me = Vkontakte::User.new "invizko@gmail.com", "whatever"

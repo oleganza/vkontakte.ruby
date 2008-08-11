@@ -3,7 +3,7 @@ module Vkontakte
     module Music
 
       # content source example: http://vkontakte.ru/audio.php?id=1
-      # result example: [{"duration"=>"1:33", "title"=>"The Diva Dance", "performer"=>"Inva Mulla Tchako", 'operate' => '38491088,1317,2613036,\'d7822781e4\',220'}, {"duration"=>"5:10", "lyrics"=>"26704098,223884", "title"=>"Confessa", "performer"=>"Adriano Celentano", 'operate' => '26911711,1339,879741,\'eab111f599\',157'}]
+      # result example: [{"duration"=>"1:33", "title"=>"The Diva Dance", "performer"=>"Inva Mulla Tchako", 'file' => "http://cs1317.vkontakte.ru/u2613036/audio/d7822781e4.mp3"}, {"duration"=>"5:10", "lyrics"=>"26704098,223884", "title"=>"Confessa", "performer"=>"Adriano Celentano", 'file' => "http://cs1339.vkontakte.ru/u879741/audio/eab111f599.mp3"}]
       def self.parse_personal_list content
         records = content.scan(/onclick="return operate\((.*?)\);".*?<b id="performer\d+?">(.*?)<\/b>.*?id="title\d+?">(.*?)<\/span>.*?class="duration">(.*?)<\/div>/mi)
         records.map!{|item| {'operate' => item[0], 'performer' => item[1], 'title' => item[2], 'duration' => item[3]}}
@@ -11,6 +11,11 @@ module Vkontakte
         records.map! do |item|
           title_parts = item['title'].scan(/<a.*?showLyrics\((.*?)\);'>(.*?)<\/a>/mi)
           title_parts.size > 0 ? {'lyrics' => title_parts[0][0], 'title' => title_parts[0][1], 'operate' => item['operate'], 'performer' => item['performer'], 'duration' => item['duration']} : item        
+        end
+
+        records.map! do |item|
+          operate_parts = item['operate'].split(',')
+          {'lyrics' => item['lyrics'], 'title' => item['title'], 'file' => "http://cs#{operate_parts[1]}.vkontakte.ru/u#{operate_parts[2]}/audio/#{operate_parts[3]}.mp3", 'performer' => item['performer']
         end
       end
     end
@@ -59,10 +64,10 @@ module Vkontakte
     module Profile
 
       # content source example: http://vkontakte.ru/profile.php?id=585655
-      # result example: [{"mobilnik"=>"80934085721"}, {"ICQ"=>"227310120"}, {"city"=>"\312\350\345\342"}, {"address"=>"\312\356\354\363 \355\340\344\356 \362\356\362 \347\355\340\345\362"}, {"index"=>"\365\347 \355\350\352\356\343\344\340 \355\345 \347\355\340\353"}, {"web site"=>"http://strelok.ho.com.ua"}]
+      # result example: //TODO fill this according to the changes in the output
       def self.parse_profile content
         basic = parse_table(content.scan(/basicInfo(.*?)\/table/mi)[0][0])
-        p content
+
         contacts = parse_table(content.scan(/Contact Information(.*?)\/table/mi)[0][0])
         personal = parse_table(content.scan(/Personal Information(.*?)\/table/mi)[0][0])
         #I know we should not rely on localized strings in parsers, cant help it.

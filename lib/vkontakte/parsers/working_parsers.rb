@@ -67,8 +67,7 @@ module Parsers
     # result example: [{"mobilnik"=>"80934085721"}, {"ICQ"=>"227310120"}, {"city"=>"\312\350\345\342"}, {"address"=>"\312\356\354\363 \355\340\344\356 \362\356\362 \347\355\340\345\362"}, {"index"=>"\365\347 \355\350\352\356\343\344\340 \355\345 \347\355\340\353"}, {"web site"=>"http://strelok.ho.com.ua"}]
     def self.parse_contacts content
       contacts_table = content.scan(/page=contacts(.*?)\/table/mi)[0][0] # since contact information blocks are too standard lets remove HTML with it from common DOM
-
-      records = contacts_table.scan(/label">(.+?):<\/td.*?dataWrap">\s*?\r\n\s*(.*?)\s*<\/div>/mi)
+      records = contacts_table.scan(/label">(.+?):<\/td.*?dataWrap">\s*(.*?)\s*<\/div>/mi)
       records.delete_if{|key, value| value =~ /<\/span>/} # removing span with innerHTML = 'secured information'
       records.map! do |key, value| # url normalizing
         url = value.scan(/<a.*?>(.*?)<\/a>/mi)

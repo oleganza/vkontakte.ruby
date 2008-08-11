@@ -57,10 +57,16 @@ module Vkontakte
       end
     end
     
-    attr_accessor :path, :user, :cookies
+    attr_accessor :path, :user, :cookies, :host
     
-    def initialize(path = '/')
-      self.path = path
+    def initialize(uri = '/')
+      self.host, self.path = 
+      if uri.index "http://"
+        parsed = URI.parse(uri)
+        [parsed.host, parsed.path]
+      else
+        [DOMAIN, uri]
+      end
     end
     
     def as(user)
@@ -87,7 +93,7 @@ module Vkontakte
     
     private
       def connection
-        @connection ||= Net::HTTP.start DOMAIN
+        @connection ||= Net::HTTP.start host
       end
       
       def handle(method, *args)

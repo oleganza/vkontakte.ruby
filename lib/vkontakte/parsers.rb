@@ -26,7 +26,11 @@ module Vkontakte
         records.map! do |item|
           item['description'].size > 0 ? item : {'title' => item['title'], 'created_at' => item['created_at']}
         end
-      end 
+      end
+      
+      def self.parse_single_video content
+        
+      end
     end
 
     module Notes

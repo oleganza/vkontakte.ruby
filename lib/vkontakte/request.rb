@@ -25,7 +25,7 @@ module Vkontakte
         "#{PREFIX}pass" => pass,
         "#{PREFIX}mid" => id,
         "#{PREFIX}chk" => 5,
-        "#{PREFIX}lang" => 1
+        "#{PREFIX}lang" => 3
       }
     end
     

@@ -1,5 +1,9 @@
 module Vkontakte
-  class User < Account
+  class User < Model
+  
+    attr_lazy :personal, :contacts, :status, :basic, :with => :fetch_personal
+  
+    include Account
     
     def homepage
       request("/id#{id}")
@@ -40,9 +44,11 @@ module Vkontakte
       Parsers::Friends.parse_personal_list(request(url).get_personalized.body).map {|f| User.new f}
     end
     
-    def contacts
-      Parsers::Contacts.parse_contacts(homepage.get.body)
-    end
+    private
+      def fetch_personal
+        self.attributes = Parsers::Profile.parse_profile(homepage.get.body)
+      end
+      
     
   end
 end

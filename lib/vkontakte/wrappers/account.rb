@@ -1,14 +1,5 @@
-require 'net/http'
-
-require 'iconv'
-require 'cgi'
-require 'md5'
-require 'jcode'
-$KCODE = 'u'
-
-
 module Vkontakte
-  class Account
+  module Account
     attr_accessor :id, :email, :pass
     attr_accessor :authorized
     

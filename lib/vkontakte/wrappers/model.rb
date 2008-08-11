@@ -13,6 +13,23 @@ module Vkontakte
       hash.each do |k, v|
         self.send :"#{k}=", v
       end
-    end    
+    end
+    
+    private
+      def self.attr_lazy(*args)
+        fetch = (Hash === args.last) ? args.slice!(-1)[:with] : :fetch
+        args.each do |m|
+          class_eval %{
+            attr_writer :#{m}
+
+            def #{m} 
+              return @#{m} if @#{m}
+              #{fetch}
+              @#{m}
+            end        
+          }     
+        end
+      end
+    
   end
 end

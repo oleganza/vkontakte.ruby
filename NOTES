@@ -8,3 +8,5 @@ operate(41897582,1107,79609,'c0f4ed0b4e',185):
 http://cs1107.vkontakte.ru/u79609/audio/c0f4ed0b4e.mp3
 
 "http://cs#{host}.vkontakte.ru/u#{user}/audio/#{file}.mp3"
+
+showLyrics ?

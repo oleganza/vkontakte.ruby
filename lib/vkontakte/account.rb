@@ -26,10 +26,6 @@ module Vkontakte
       @id
     end
     
-    def params(response) 
-      @params ||= {}#UserPage.new(response || request('/'))
-    end
-    
     def request(url, account = self)
       Request.new(url).as account
     end

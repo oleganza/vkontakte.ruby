@@ -7,6 +7,10 @@ module Vkontakte
       self.url = url
     end
     
+    def author=(id)
+      @author = User.new(id)
+    end
+    
     %w[created_at title author body].each do |m|
       class_eval %{
         def #{m} 

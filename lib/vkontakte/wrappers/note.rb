@@ -9,7 +9,7 @@ module Vkontakte
     end
     
     def author=(id)
-      @author = User.new(id)
+      @author ||= User.new(id)
     end
     
     private

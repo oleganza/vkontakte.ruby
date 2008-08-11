@@ -15,7 +15,11 @@ module Vkontakte
     alias audios music
     
     def videos
-      Parsers::Video.parse_personal_list(request("/video.php").get_personalized.body).map {|v| Video.new v}
+      Parsers::Video.parse_personal_list(request("/video.php").get_personalized.body).map do |v| 
+        Video.new(v) do |url|
+          Parsers::Video.parse_single_video request(url).get.body
+        end
+      end
     end
     
     def notes(mode = :all)

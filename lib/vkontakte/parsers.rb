@@ -14,27 +14,33 @@ module Vkontakte
         end
 
         records.map! do |item|
-          operate_parts = item['operate'].split(',')
-          {'lyrics' => item['lyrics'], 'title' => item['title'], 'file' => "http://cs#{operate_parts[1]}.vkontakte.ru/u#{operate_parts[2]}/audio/#{operate_parts[3]}.mp3", 'performer' => item['performer']
+          m, server, user, file = item['operate'].split(',')
+          file.tr!("'", "")
+          {'lyrics' => item['lyrics'], 'title' => item['title'], 'file_url' => "http://cs#{server}.vkontakte.ru/u#{user}/audio/#{file}.mp3", 'performer' => item['performer']}
         end
       end
+      
     end
+
 
     module Video
 
       # content source example: http://vkontakte.ru/video.php?id=1
       # result example: [{"created_at"=>"3 \340\342\343\363\361\362\340 2008", "title"=>"\323\354\340\362\356\342\373\351 \344\356\353\343\356\357\377\362", "description"=>"\315\345 \354\345\370\340\351\362\345 \345\354\363, \356\355 \352\363\370\340\345\362."}, {"created_at"=>"30 \350\376\355\377 2008", "title"=>"Hitla in da contakta", "description"=>"dast ist kaput"}, {"created_at"=>"14 \354\340\377 2008", "title"=>"Italians", "description"=>""}]
       def self.parse_personal_list content
-        records = content.scan(/<div class="aname"><a href="video.+?">(.*?)<\/a><\/di.*?="adesc">(.*?)<\/d.*?class="ainfo">.*? (.*?)<\/div>/mi)
-        records.map!{|item| {'title' => item[0], 'description' => item[1], 'created_at' => item[2]}}
+        records = content.scan(/<div class="aname"><a href="video(.+?)">(.*?)<\/a><\/di.*?="adesc">(.*?)<\/d.*?class="ainfo">.*? (.*?)<\/div>/mi)
+        records.map!{|item| {'url' => item[0], 'title' => item[1], 'description' => item[2], 'created_at' => item[3]}}
 
         records.map! do |item|
-          item['description'].size > 0 ? item : {'title' => item['title'], 'created_at' => item['created_at']}
+          item['url'] = "http://vkontakte.ru/video" << item['url']
+          item.delete 'description' if item['description'].empty?
+          item
         end
       end
       
       def self.parse_single_video content
-        
+        thumbnail_url = content.match(/http:\/\/.*?.vkadre.ru\/assets\/thumbnails\/.*?.460.vk.jpg/)[0]
+        {:thumbnail_url => thumbnail_url, :file_url => thumbnail_url.sub(/jpg$/, 'flv')}
       end
     end
 

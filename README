@@ -27,7 +27,7 @@ end
 
 Puppets
 
-Call them bots, if you please. They are used to browser other user's profiles like this:
+Call them bots, if you please. They are used to browse other user's profiles like this:
 
 
 VkontakteRuby::User.new("invizko@gmail.com", "whatever").puppetize! #=> [<#User...>], the array of all active puppets

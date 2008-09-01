@@ -10,3 +10,9 @@ http://cs1107.vkontakte.ru/u79609/audio/c0f4ed0b4e.mp3
 "http://cs#{host}.vkontakte.ru/u#{user}/audio/#{file}.mp3"
 
 showLyrics ?
+
+Audio pages:
+
+http://vkontakte.ru/audio.php?act=getpages&id=7146&offset=0
+http://vkontakte.ru/audio.php?act=getpages&id=7146&offset=50
+http://vkontakte.ru/audio.php?act=getpages&id=7146&offset=100

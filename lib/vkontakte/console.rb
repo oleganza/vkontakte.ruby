@@ -6,6 +6,47 @@ module Vkontakte
       puts "Vkontakte v#{Vkontakte::VERSION} (help! for more info)"
     end
     
+    def login
+      email    = prompt_email(ENV['VKONTAKTE_EMAIL'])
+      password = prompt_password
+      User.new(email, password)
+    end
+
+    def prompt_password
+      print "Password: "
+      p = no_echo { gets.chomp }
+      puts
+      if p == ""
+        return prompt_password
+      else
+        p
+      end
+    end
+    
+    def prompt_email(default = nil)
+      e = default ? " [press enter to choose #{default}]" : ""
+      print "Email#{e}: "
+      r = gets.chomp
+      if r == ""
+        if default
+          puts "Using #{default}"
+          return default
+        end
+        return prompt_email
+      else
+        r
+      end
+    end
+    
+    def no_echo
+      begin
+        system("stty -echo")
+        yield
+      ensure
+        system("stty echo")
+      end
+    end
+    
     def help!
       puts %{
   reload!   Reloads console environment.

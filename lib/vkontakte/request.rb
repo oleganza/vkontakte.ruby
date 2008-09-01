@@ -108,10 +108,10 @@ module Vkontakte
             end
           end
           
-            p path
+            #p path
           
           if Net::HTTPRedirection === response
-            raise "You should log this user in or choose a puppet"  if response['Location'].index "login"
+            raise "You should log this user in or choose a puppet" if response['Location'].index "login"
           end
           response
         rescue Net::HTTPBadResponse => e

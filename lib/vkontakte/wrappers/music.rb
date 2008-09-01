@@ -6,6 +6,10 @@ module Vkontakte
       Request.new(file_url).get
     end
     
+    def play
+      system(%{mplayer "#{file_url}"})
+    end
+    
     def contents
       request.body
     end

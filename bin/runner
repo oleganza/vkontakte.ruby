@@ -1,0 +1,112 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require 'ostruct'
+require 'logger'
+require File.join(File.dirname(__FILE__), '/../lib/vkontakte')
+require File.join(File.dirname(__FILE__), '/../lib/vkontakte/runner')
+
+
+module Runner
+  
+  Version = [0, 3, :beta]
+  Name = "vkrunner"
+  
+  CLI.set_logger(STDOUT)
+  
+  CLI.set_options(ARGV) do 
+    declare(:email, "Account email") do |v|
+      "Email is incorrect, just in case, it should be like 'bill@gmail.com'." unless v =~ /.+@.+\..{2,}/
+    end
+    
+    declare(:password, "Account password") do |v|
+      "Password is too short" if v.size < 5
+    end
+    
+    declare(:loglevel, "Verbosity", :default => :debug, :shorthand => "l") do |v|
+      %w[fatal error warn info debug].include?(v) ? v.to_sym : "Unsupported value. Choose from 'debug' - verbose, 'info' - interface only, 'warn' - errors only."
+    end
+
+    declare(:logfile, "Log file", :default => "STDOUT", :shorthand => "f")
+    
+    declare(:macros, "Macro", :default => nil, :arguments => ["Comma-separated list of actions to execute", "Example: 1,2,hello,bye"])
+
+    declare(:asyncronous, "Asyncronous calls", :arguments => ["Do not wait for server to respond on POSTs"], :tail => true, :default => false) do |v|
+      $OMG = true
+    end
+    
+    declare(:help, "Show this message", :tail => true) do |v|
+      options.help
+    end
+    
+    declare(:version, "Show version", :tail => true) do |v|
+      "#{Name} #{Runner::Version * '.'}"
+    end
+  end
+  
+  CLI.set_actions(:invalid => nil) do 
+    declare(:prompt, "Please enter %s.")
+    
+    declare(:confirm, "Would you like %s? [y/n]") do |v|
+      case v
+      when "y", "Y", "1"
+        true
+      when "n", "N", "0"
+        false
+      else
+        :retry
+      end      
+    end    
+    
+    declare(:menu, lambda{|*args| (Walker::Menu === args.first ? args.first : Walker::Menu.new(*args)).to_select}) do |v|
+      :retry unless v =~ /^\d+$/
+    end
+  end
+   
+  module CLI
+    class << self
+      alias_method :old_gets, :gets
+      def gets
+        v = old_gets
+        case v
+        when "exit", "quit"
+          throw :exit
+        when "reset", "home"
+          throw :reset
+        end
+        v
+      end
+    end
+  end
+
+  CLI.set_logger(CLI[:logfile]) unless (CLI[:logfile] == "STDOUT") 
+  
+  
+  CLI.logger.level = Logger.const_get(CLI[:loglevel].to_s.upcase) #Logger::WARN
+
+  CLI.notify :debug, "Hello there, pardner."
+  CLI.notify :debug, "Let's make it SOCIAL!"
+  CLI.notify :debug, " "
+  CLI.notify :debug, "So we need to authenticate..."  
+
+  user = Vkontakte::User.new CLI[:email], CLI[:password]
+  
+  #CLI.notify :puppet, "Alright, we're in. ID is #{user}."
+  #CLI.notify :puppet, "Gonna grab the profile for starters."
+
+  #CLI.notify :puppet, "Name's #{user.personal.inspect}"
+  
+  
+  CLI.notify :info, " "
+  
+  catch :exit do
+    loop do
+      catch :reset do
+        CLI.menu_for (CLI.queued || user);
+      end
+    end
+  end
+  
+  CLI.notify :debug, "Good job, pardner."
+  CLI.notify :debug, "I mean it. Now go take a rest."
+  CLI.notify :debug, " "
+end

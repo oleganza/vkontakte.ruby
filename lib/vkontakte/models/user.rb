@@ -48,9 +48,28 @@ module Vkontakte
       Parsers::Friends.parse_personal_list(request(url).get_personalized.body).map {|f| User.new f}
     end
     
+    def to_summary
+      "A good guy, named something. Maybe he is online now."
+    end
+    
     private
       def fetch_personal
-        self.attributes = Parsers::Profile.parse_profile(homepage.get.body)
+        self.attributes ||= {
+          :personal => {
+            "Name" => "Katya Pechonkina", 
+            "Age" => 19,
+            "Gender" => "Female"
+          }, 
+          
+          :contacts => {
+            "ICQ" => "28885992",
+            "Mobile Phone" => "2920939399", 
+            "Skype" => "pecho0000nka"
+          },
+          
+          :status => 'Ima lol xD'
+          
+        }#Parsers::Profile.parse_profile(homepage.get.body)
       end
       
     

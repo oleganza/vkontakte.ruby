@@ -63,7 +63,7 @@ module Runner
           result = (@items - @items.grep(String))[i]
           result = @object.instance_eval(&result.logic) if (Action === result)
           if result == :back 
-            result = CLI.previous
+            result = CLI.stack.slice!(-1)
           else
             if [String, Symbol, Hash, Array].any?{|c| c === result}
               CLI.print(result) 
@@ -75,7 +75,7 @@ module Runner
         end
         
         CLI.queued = result
-        CLI.previous = self if (set_history)
+        CLI.stack << self if (set_history)
       end
     
       def to_select

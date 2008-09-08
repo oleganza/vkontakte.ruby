@@ -1,8 +1,8 @@
 module Runner
   module CLI
     class << self
-      attr_accessor :options, :actions, :logger, :queued, :previous, :macros
-    
+      attr_accessor :options, :actions, :logger, :queued, :macros, :stack
+      
       def set_logger(*args, &blk)
         @logger = Logger.new(*args, &blk)
         formatter = Logger::Formatter.new
@@ -80,13 +80,12 @@ module Runner
         q = @queued; @queued = nil; q
       end
       
-      def previous
-        p = @previous; @previous = nil; p
-      end
-      
       def next_macro
         @macros.slice!(0) if @macros && Array === @macros
       end  
     end
+    
+    self.macros = []
+    self.stack = []
   end
 end

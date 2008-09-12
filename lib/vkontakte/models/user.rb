@@ -5,6 +5,28 @@ module Vkontakte
   
     include Account
     
+    def male?
+      basic['Sex'] == "Male"
+    end
+    
+    def female?
+      not male?
+    end
+    
+    def name
+      "Fedot Ivanov"
+    end
+    
+    def summary
+      [name, personal['Hometown']].compact * ", "
+    end
+    
+    def summary_with_status
+      [summary + status].compact * "\n"
+    end
+    
+    
+    
     def homepage
       request("/id#{id}")
     end
@@ -48,30 +70,9 @@ module Vkontakte
       Parsers::Friends.parse_personal_list(request(url).get_personalized.body).map {|f| User.new f}
     end
     
-    def to_summary
-      "A good guy, named something. Maybe he is online now."
-    end
-    
     private
       def fetch_personal
-        self.attributes ||= {
-          :personal => {
-            "Name" => "Katya Pechonkina", 
-            "Age" => 19,
-            "Gender" => "Female"
-          }, 
-          
-          :contacts => {
-            "ICQ" => "28885992",
-            "Mobile Phone" => "2920939399", 
-            "Skype" => "pecho0000nka"
-          },
-          
-          :status => 'Ima lol xD'
-          
-        }#Parsers::Profile.parse_profile(homepage.get.body)
-      end
-      
-    
+        self.attributes ||= Parsers::Profile.parse_profile(homepage.get.body)
+      end    
   end
 end

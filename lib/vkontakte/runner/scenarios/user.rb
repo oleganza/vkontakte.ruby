@@ -2,21 +2,18 @@ module Runner
   module Walker
     Scenarios.add :user do 
       caption do
-        personal['Name']
+        self.summary
       end
       menu(object, "View information") do 
         caption do
-          [personal['Name'], personal['Age'], personal['Gender']] * " "
-        end
-        caption do
-          "Status: #{status}"
+          self.summary_with_status
         end
         action ("Personal information") {personal}
         action ("Contacts") {contacts}
         action ("Return back to profile") {:back}
       end
-      action ("Remove from friends") {current_puppet.friends.remove self} if (1 == "friend")
-      action ("Send friendship request") {current_puppet.friends.add self} if (1 != "friend")
+      action ("Remove from friends") {$user.friends.remove self} if (1 == "friend")
+      action ("Send friendship request") {$user.friends.add self} if (1 != "friend")
       
       menu(object, "Write him...") do
         action ("Writer him a message") do
@@ -37,7 +34,7 @@ module Runner
         action ("Browse his notes") {u}
         action ("Return back to profile") {:back}
       end
-      menu(object, lambda{"My... [#{$user.personal['Name']}]"}) do
+      menu(object, lambda{"My... [#{$user.summary}]"}) do
         action ("My profile") {$user}
         action ("My messages") {u}
         action ("My photos") {u}

@@ -87,21 +87,21 @@ module Runner
   
   CLI.logger.level = Logger.const_get(CLI[:loglevel].to_s.upcase) #Logger::WARN
 
-  CLI.notify :debug, "Hello there, pardner."
-  CLI.notify :debug, "Let's make it SOCIAL!"
-  CLI.notify :debug, "Type exit to terminate this"
-  CLI.notify :debug, " "
-  CLI.notify :debug, "So we need to authenticate..."  
+  CLI.debug "Hello there, pardner."
+  CLI.debug "Let's make it SOCIAL!"
+  CLI.debug "Type exit to terminate this"
+  CLI.debug " "
+  CLI.debug "So we need to authenticate..."  
 
   $user = Vkontakte::User.new CLI[:email], CLI[:password]
   
-  #CLI.notify :puppet, "Alright, we're in. ID is #{user}."
-  #CLI.notify :puppet, "Gonna grab the profile for starters."
-
-  #CLI.notify :puppet, "Name's #{user.personal.inspect}"
+  CLI.debug "Alright, we're in. ID is #{$user.id}."
+  CLI.debug "Gonna grab the profile for starters."
+      
+  CLI.info "Name's #{$user.name}"
   
   
-  CLI.notify :info, " "
+  CLI.info " "
   
   catch :exit do
     loop do
@@ -111,7 +111,7 @@ module Runner
     end
   end
   
-  CLI.notify :debug, "Good job, pardner."
-  CLI.notify :debug, "I mean it. Now go take a rest."
-  CLI.notify :debug, " "
+  CLI.debug "Good job, pardner."
+  CLI.debug "I mean it. Now go take a rest."
+  CLI.debug " "
 end

@@ -34,6 +34,10 @@ module Runner
       $OMG = true
     end
     
+    declare(:color, "Output color", :tail => true, :default => 32) do |v|
+      CLI.color = v == "false" ? "" : v
+    end
+    
     declare(:help, "Show this message", :tail => true) do |v|
       options.help
     end
@@ -85,10 +89,11 @@ module Runner
 
   CLI.notify :debug, "Hello there, pardner."
   CLI.notify :debug, "Let's make it SOCIAL!"
+  CLI.notify :debug, "Type exit to terminate this"
   CLI.notify :debug, " "
   CLI.notify :debug, "So we need to authenticate..."  
 
-  user = Vkontakte::User.new CLI[:email], CLI[:password]
+  $user = Vkontakte::User.new CLI[:email], CLI[:password]
   
   #CLI.notify :puppet, "Alright, we're in. ID is #{user}."
   #CLI.notify :puppet, "Gonna grab the profile for starters."
@@ -101,7 +106,7 @@ module Runner
   catch :exit do
     loop do
       catch :reset do
-        CLI.menu_for (CLI.queued || user);
+        CLI.menu_for (CLI.queued || $user);
       end
     end
   end

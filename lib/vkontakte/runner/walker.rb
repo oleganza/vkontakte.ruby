@@ -1,7 +1,16 @@
 module Runner
   module Walker
-    class Action
-      attr_accessor :title, :logic
+    
+    class Item
+      attr_writer :title
+      
+      def title
+        Proc === @title ? @title.call : @title
+      end
+    end
+    
+    class Action < Item
+      attr_accessor :logic
       def initialize(title, &blk)
         @title = title
         @logic = blk
@@ -28,8 +37,8 @@ module Runner
       end
     end
 
-    class Menu
-      attr_accessor :items, :title, :scenarios, :object, :blk
+    class Menu < Item
+      attr_accessor :items, :scenarios, :object, :blk
       
       def initialize(object, title = nil, &blk)
         @blk, @object, @title = (self.class === object) ? [object.blk, object.object, object.title] : [blk, object, title]       
@@ -81,7 +90,7 @@ module Runner
       def to_select
         menu = @items
         i = 0
-        menu.map {|item| String === item ? item : "#{i+=1}) #{item.title}" } * "\n"
+        menu.map {|item| String === item ? item : CLI.colorize("#{i+=1}) #{item.title}") } * "\n"
       end
     end
   end

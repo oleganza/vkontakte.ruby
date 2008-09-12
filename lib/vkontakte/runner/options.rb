@@ -67,7 +67,7 @@ module Runner
     def request
       print "> "
       if macro = CLI.next_macro
-        print "macro","\n"
+        print macro,"\n"
         macro
       else
         CLI.gets

@@ -17,22 +17,33 @@ module Runner
       end
       action ("Remove from friends") {current_puppet.friends.remove self} if (1 == "friend")
       action ("Send friendship request") {current_puppet.friends.add self} if (1 != "friend")
-      action ("Write a personal message") do
-        CLI.info "Let's right a personal message"
-        t, b = CLI.prompt(:title), CLI.prompt(:body)
-        CLI.debug "Sending the message."
-        #Messages.create{:title => t, :body => b, :author => current_puppet}
-        "Message has been sent."
-      end
-      action ("Write an opinion") {"loool"}
-      action ("Write a message on the wall") {u}
-      menu(object, "Browse his media") do 
-        action ("Check his photos") {u} if (1 == "has pix")
-        action ("Check his movies") {u}
-        action ("Check his music") {u}
+      
+      menu(object, "Write him...") do
+        action ("Writer him a message") do
+          CLI.info "Let's right a personal message"
+          t, b = CLI.prompt(:title), CLI.prompt(:body)
+          CLI.debug "Sending the message."
+          #Messages.create{:title => t, :body => b, :author => current_puppet}
+          "Message has been sent."
+        end
+        action ("Writer him something on the wall") {"Yada-yada, Ima writin on teh wall"}
+        action ("Writer him an anonymous opinion") {"loool"}
         action ("Return back to profile") {:back}
       end
-      menu(object, "VKRunner") do
+      menu(object, "Browse his media...") do 
+        action ("Browse his photos") {u}
+        action ("Browse his movies") {u}
+        action ("Browse his music") {u}
+        action ("Browse his notes") {u}
+        action ("Return back to profile") {:back}
+      end
+      menu(object, lambda{"My... [#{$user.personal['Name']}]"}) do
+        action ("My profile") {$user}
+        action ("My messages") {u}
+        action ("My photos") {u}
+        action ("Return back to profile") {:back}
+      end
+      menu(object, "Runner thingies") do
         action ("Run macro") do
           CLI.macros = (CLI[:macros] || CLI.prompt("comma-separated set of actions, i.e: 1,2,hello,bye")).split(",")
         end

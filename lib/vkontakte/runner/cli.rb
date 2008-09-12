@@ -1,7 +1,7 @@
 module Runner
   module CLI
     class << self
-      attr_accessor :options, :actions, :logger, :queued, :macros, :stack
+      attr_accessor :options, :actions, :logger, :queued, :macros, :stack, :color
       
       def set_logger(*args, &blk)
         @logger = Logger.new(*args, &blk)
@@ -61,12 +61,21 @@ module Runner
         when Symbol
           obj.to_s
         when Array
-          obj * ", "
+          if obj.all?{|i| Array === i}
+            sizes = (0..obj.first.size - 1).map do |i|
+              obj.map{|o| o[i]}.max{|a, b| a.to_s.size <=> b.to_s.size}.size
+            end
+            obj.map do |columns|
+              i = -1
+              columns.map do |value|
+                value.to_s.ljust(sizes[i+=1])
+              end.join(" " * 3)
+            end.join("\n")
+          else
+            obj * ", "
+          end
         when Hash
-          size = obj.keys.max{|a, b| a.to_s.size <=> b.to_s.size}.size
-          obj.map do |k, v|
-            k.to_s.rjust(size) + ": " + v.to_s
-          end.join("\n")
+          return print(obj.to_a)
         end
         CLI.info msg + "\n"
       end
@@ -82,7 +91,11 @@ module Runner
       
       def next_macro
         @macros.slice!(0) if @macros && Array === @macros
-      end  
+      end
+      
+      def colorize(text)
+        CLI[:color] && "\e[#{CLI[:color]}m#{text}\e[0m"
+      end
     end
     
     self.macros = []

@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
+require 'optparser'
 require File.join(File.dirname(__FILE__), '/../lib/vkontakte')
-include Vkontakte::Console
-initialize_console
-IRB.start
+port = ARGV[0] || ENV['SMTP_PORT'] || 25
+host = ARGV[1] || ENV['SMTP_HOST'] || "0.0.0.0"
+SMTPServer.start(port.to_i, host.to_s)
+
+
+end

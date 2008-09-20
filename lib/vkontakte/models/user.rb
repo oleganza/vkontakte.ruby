@@ -5,6 +5,28 @@ module Vkontakte
   
     include Account
     
+    def male?
+      basic['Sex'] == "Male"
+    end
+    
+    def female?
+      not male?
+    end
+    
+    def name
+      "Fedot Ivanov"
+    end
+    
+    def summary
+      [name, personal['Hometown']].compact * ", "
+    end
+    
+    def summary_with_status
+      [summary + status].compact * "\n"
+    end
+    
+    
+    
     def homepage
       request("/id#{id}")
     end
@@ -50,9 +72,7 @@ module Vkontakte
     
     private
       def fetch_personal
-        self.attributes = Parsers::Profile.parse_profile(homepage.get.body)
-      end
-      
-    
+        self.attributes ||= Parsers::Profile.parse_profile(homepage.get.body)
+      end    
   end
 end

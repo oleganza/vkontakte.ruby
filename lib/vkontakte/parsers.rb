@@ -91,10 +91,12 @@ module Vkontakte
         def self.parse_table(content)
           rows = content.scan(/label">(.+?):<\/td.*?dataWrap">\s*(.*?)\s*<\/div>/mi)
           rows.delete_if{|key, value| value =~ /<\/span>/} # removing span with innerHTML = 'secured information'
-          rows.map! do |key, value| # url normalizing
+          o = {}
+          rows.map do |key, value| # url normalizing
             url = value.scan(/<a.*?>(.*?)<\/a>/mi)
-            url.size > 0 ? {key => url[0][0]} : {key => value}
+            o[key] = url.size > 0 ? url[0][0] : value
           end
+          o
         end
     end
   end
